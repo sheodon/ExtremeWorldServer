@@ -19,6 +19,7 @@ import javax.validation.Validator;
 import com.jixianxueyuan.config.*;
 import com.jixianxueyuan.entity.*;
 import com.jixianxueyuan.rest.dto.request.WeiXinWebPage;
+import com.jixianxueyuan.service.*;
 import com.jixianxueyuan.service.account.SecurityUser;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -44,10 +45,6 @@ import com.jixianxueyuan.rest.dto.MyPage;
 import com.jixianxueyuan.rest.dto.MyResponse;
 import com.jixianxueyuan.rest.dto.TopicDTO;
 import com.jixianxueyuan.rest.dto.TopicExtraDTO;
-import com.jixianxueyuan.service.CollectionService;
-import com.jixianxueyuan.service.TopicScoreService;
-import com.jixianxueyuan.service.TopicService;
-import com.jixianxueyuan.service.UserService;
 import com.jixianxueyuan.service.account.ShiroDbRealm.ShiroUser;
 import sun.net.www.http.HttpClient;
 
@@ -73,6 +70,9 @@ public class TopicRestController
 	
 	@Autowired
 	private TopicScoreService topicScoreService;
+
+	@Autowired
+	PointService pointService;
 
 
 	@RequestMapping( method = RequestMethod.GET, produces = MediaTypes.JSON_UTF_8)
@@ -258,6 +258,8 @@ public class TopicRestController
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaTypes.JSON)
 	public MyResponse create(@RequestBody Topic topic, UriComponentsBuilder uriBuilder)
 	{
+		Long userId = getCurrentUserId();
+
 		//fix ios hobby
 		List<Hobby> hobbyList = topic.getHobbys();
 		if(hobbyList != null && hobbyList.size() == 1){
@@ -271,7 +273,10 @@ public class TopicRestController
 		
 		topic.setStatus(TopicStatus.PUBLIC);
 		topicService.saveTopic(topic);
-		
+
+		//每日发主题积分
+		pointService.addPoint(PointType.TOPIC, userId);
+
 
 		Topic result = topicService.getTopic(topic.getId());
 		TopicDTO dto = BeanMapper.map(result, TopicDTO.class);
