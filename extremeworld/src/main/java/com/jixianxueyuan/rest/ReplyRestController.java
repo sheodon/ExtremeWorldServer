@@ -95,7 +95,7 @@ public class ReplyRestController
 			enableDelete = true;
 		}
 		if (enableDelete) {
-			return MyResponse.ok(null, false);
+			return MyResponse.ok(null);
 		}
 
 		return MyResponse.err(MyErrorCode.NO_PRIVILEGE);

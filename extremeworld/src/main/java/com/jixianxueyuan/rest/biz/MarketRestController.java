@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jixianxueyuan.config.HobbyPathConfig;
+import com.jixianxueyuan.entity.AppConfig;
+import com.jixianxueyuan.service.AppConfigService;
 import com.jixianxueyuan.utils.TargetInfo;
 import com.jixianxueyuan.entity.biz.Category;
 import com.jixianxueyuan.rest.dto.MyResponse;
@@ -22,19 +24,24 @@ public class MarketRestController {
 
 	@Autowired
 	CategoryService categoryService;
+
+	@Autowired
+	AppConfigService appConfigService;
 	
 	@RequestMapping(method = RequestMethod.GET, produces = MediaTypes.JSON_UTF_8)
 	MyResponse list(@PathVariable String hobby,
 					@RequestParam(value = "targetInfo", required = false) String targetInfo){
 
-		if (TargetInfo.isIOSAppVersion(targetInfo, "1.5.0")) {
+		Long hobbyId = HobbyPathConfig.getHobbyId(hobby);
+		AppConfig appConfig = appConfigService.getAppConfig(hobbyId);
+
+		if (TargetInfo.isIOSAppVersion(targetInfo, appConfig.getIosAppVersionLimit())) {
 
 			MarketDTO storeInfo = new MarketDTO();
 			storeInfo.setCategoryList(new ArrayList<CategoryDTO>());
 			return MyResponse.ok(storeInfo);
 		}
 
-		Long hobbyId = HobbyPathConfig.getHobbyId(hobby);
 		List<Category> categoryList = categoryService.getAllByHobbyId(hobbyId);
 		List<CategoryDTO> categoryDTOList = BeanMapper.mapList(categoryList, CategoryDTO.class);
 		

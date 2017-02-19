@@ -4,6 +4,8 @@
 package com.jixianxueyuan.rest.biz;
 
 import com.jixianxueyuan.config.HobbyPathConfig;
+import com.jixianxueyuan.entity.AppConfig;
+import com.jixianxueyuan.service.AppConfigService;
 import com.jixianxueyuan.utils.TargetInfo;
 import com.jixianxueyuan.entity.biz.Shop;
 import com.jixianxueyuan.rest.dto.MyPage;
@@ -35,7 +37,10 @@ public class ShopRestController {
 	
 	@Autowired
 	ShopService shopService;
-	
+
+	@Autowired
+	AppConfigService appConfigService;
+
 	@RequestMapping(method = RequestMethod.GET, produces = MediaTypes.JSON_UTF_8)
 	public MyResponse list(@PathVariable String hobby,
 						   @RequestParam(value = "page", defaultValue = "1") int pageNumber,
@@ -43,12 +48,14 @@ public class ShopRestController {
 						   @RequestParam(value = "sortType", defaultValue = "auto") String sortType,
 						   @RequestParam(value = "targetInfo", required = false) String targetInfo){
 
-		if (TargetInfo.isIOSAppVersion(targetInfo, "1.5.0")) {
+		Long hobbyId = HobbyPathConfig.getHobbyId(hobby);
+		AppConfig appConfig = appConfigService.getAppConfig(hobbyId);
+
+		if (TargetInfo.isIOSAppVersion(targetInfo, appConfig.getIosAppVersionLimit())) {
 			MyPage<ShopDTO,Shop> myShopPage = new MyPage<ShopDTO,Shop>();
 			return MyResponse.ok(myShopPage);
 		}
 
-		Long hobbyId = HobbyPathConfig.getHobbyId(hobby);
 		Page<Shop> shopPage = shopService.getAllByHobbyId(hobbyId, pageNumber, pageSize, sortType);
 		MyPage<ShopDTO,Shop> myShopPage = new MyPage<ShopDTO,Shop>(ShopDTO.class, shopPage);
 		

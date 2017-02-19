@@ -10,6 +10,7 @@ public class AppConfig extends IdEntity{
 	private Boolean openInvitation;
 	private String invitationDesTitle;
 	private String invitationDesUrl;
+	private String iosAppVersionLimit;
 
 	public Boolean getOpenInvitation() {
 		return openInvitation;
@@ -35,7 +36,7 @@ public class AppConfig extends IdEntity{
 		this.invitationDesUrl = invitationDesUrl;
 	}
 	
-	
-	
-	
+	public String getIosAppVersionLimit() { return iosAppVersionLimit; }
+	public void setIosAppVersionLimit(String iosAppVersionLimit) { this.iosAppVersionLimit = iosAppVersionLimit; }
+
 }

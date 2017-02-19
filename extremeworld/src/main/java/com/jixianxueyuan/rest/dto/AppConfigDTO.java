@@ -7,6 +7,7 @@ public class AppConfigDTO {
 	private Boolean openInvitation;
 	private String invitationDesTitle;
 	private String invitationDesUrl;
+	private String iosAppVersionLimit;
 
 	public Boolean getOpenInvitation() {
 		return openInvitation;
@@ -31,5 +32,12 @@ public class AppConfigDTO {
 	public void setInvitationDesUrl(String invitationDesUrl) {
 		this.invitationDesUrl = invitationDesUrl;
 	}
-	
+
+	public String getIosAppVersionLimit() {
+		return iosAppVersionLimit;
+	}
+
+	public void setIosAppVersionLimit(String iosAppVersionLimit) {
+		this.iosAppVersionLimit = iosAppVersionLimit;
+	}
 }

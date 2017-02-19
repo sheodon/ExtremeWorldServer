@@ -101,7 +101,7 @@ public class TopicRestController
 		case TopicType.NEWS:
 		case TopicType.VIDEO:
 		case TopicType.S_VIDEO:
-			if (0 == taxonomyId) {
+			if (0L == taxonomyId) {
 				topicPageSource = topicService.getTopicByHobbyAndType(hobbyId, type, pageNumber, pageSize, sortType, timestamp);
 			}
 			else {
@@ -175,7 +175,7 @@ public class TopicRestController
 		if (enableDelete) {
 			topic.setStatus(TopicStatus.DELETE);
 			topicService.saveTopic(topic);
-			return MyResponse.ok(null, false);
+			return MyResponse.ok(null);
 		}
 		else {
 			return MyResponse.err(MyErrorCode.NO_PRIVILEGE);

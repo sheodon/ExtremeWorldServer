@@ -174,7 +174,7 @@ public class TopicService
 	{
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
 
-		if (timestamp == 0L) {
+		if (timestamp <= 0L) {
 			if(hobbyId == 0L)
 			{
 				return topicDao.findAll(pageRequest);
@@ -194,7 +194,7 @@ public class TopicService
 	public Page<Topic> getTopicByHobbyAndType(Long hobbyId, String type, int pageNumber, int pageSize, String sortType, Long timestamp)
 	{
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
-		if (0 == timestamp) {
+		if (0L >= timestamp) {
 			return topicDao.findByHobbyAndType(hobbyId, type, TopicStatus.PUBLIC, pageRequest);
 		}
 		else {
@@ -206,7 +206,7 @@ public class TopicService
 	public Page<Topic> getTopicByHobbyAndTypeAndTaxonomy(Long hobbyId, String type, Long taxonomyId, int pageNumber, int pageSize, String sortType, Long timestamp)
 	{
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
-		if (0 == timestamp) {
+		if (0L >= timestamp) {
 			return topicDao.findByHobbyAndTypeAndTaxonomy(hobbyId, type, taxonomyId, TopicStatus.PUBLIC ,pageRequest);
 		}
 		else {

@@ -42,7 +42,7 @@ public  class TargetInfo {
 
     public static boolean isIOSAppVersion(String targetInfo, String version) {
 
-        if (targetInfo == null) {
+        if (targetInfo == null || version == null) {
             return false;
         }
         TargetInfo target = new TargetInfo(targetInfo);
